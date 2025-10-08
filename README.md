@@ -1,70 +1,92 @@
-# Getting Started with Create React App
+# Calculator (React + Redux Toolkit)
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Simple calculator with input, basic operations, and a history of evaluated expressions. Built with React, Redux Toolkit, and Create React App.
 
-## Available Scripts
+## Features
 
-In the project directory, you can run:
+- Digits and operators: `0–9`, `.`, `+`, `-`, `*`, `/`
+- Evaluate expression with `=`
+- Edit helpers: `DEL` (backspace) and `CLEAR`
+- Calculation history list stored in Redux state
 
-### `npm start`
+## Tech Stack
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- React
+- Redux Toolkit + React Redux
+- Create React App (react-scripts)
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Getting Started
 
-### `npm test`
+Requirements: Node.js (LTS recommended) and npm.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+1. Install dependencies
 
-### `npm run build`
+```bash
+cd calculator
+npm install
+# If you see missing peer deps for Redux tooling:
+npm install @reduxjs/toolkit react-redux
+```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+2. Start the dev server
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+```bash
+npm start
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Then open `http://localhost:3000`.
 
-### `npm run eject`
+## Scripts
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+- `npm start`: run development server
+- `npm run build`: production build to `build/`
+- `npm test`: run tests (if any)
+- `npm run eject`: expose CRA config (irreversible)
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Project Structure
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+```
+calculator/
+  src/
+    components/
+      Calculator.js      # UI and interactions
+      HistoryList.js     # Displays calculation history
+    redux/
+      CalculatorSlice.js # Redux slice (state + reducers)
+      store.js           # Store configuration
+    App.js               # App composition
+    index.js             # Entry with Provider
+```
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## State Shape
 
-## Learn More
+```js
+// state.calculator
+{
+  display: string,
+  history: string[] // e.g. ["1+2=3", "3*4=12"]
+}
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Reducers (actions): `appendValue`, `deleteLast`, `clearDisplay`, `calculateResult`.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## How It Works
 
-### Code Splitting
+- UI dispatches `appendValue` for button presses; `=` triggers `calculateResult`.
+- `calculateResult` evaluates the expression and appends a "expr=result" entry to history.
+- `HistoryList` reads `state.calculator.history` and renders items.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+Note: Expression evaluation currently uses `eval` on the UI-generated string. Inputs are constrained to calculator buttons.
 
-### Analyzing the Bundle Size
+## Troubleshooting
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+- Blank screen or crash:
+  - Open browser devtools console and read the error.
+  - Ensure `index.js` wraps `<App />` with `<Provider store={store}>`.
+  - Ensure `HistoryList` selects `state.calculator.history`.
+  - Install missing dependencies: `npm install @reduxjs/toolkit react-redux`.
+  - Restart dev server after dependency changes.
 
-### Making a Progressive Web App
+## License
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+MIT
